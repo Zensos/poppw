@@ -5,8 +5,10 @@ const img = document.getElementById("toggleImage");
 const lol = document.getElementById("trigger");
 document.head.appendChild(script);
 
+let client; // Declare client in the outer scope
+
 script.onload = () => {
-  const client = mqtt.connect("ws://broker.hivemq.com:8000/mqtt");
+  client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt"); // Use secure WebSocket
   const topic = "/test/roblox";
 
   client.on("connect", () => {
@@ -31,7 +33,7 @@ script.onload = () => {
 
   client.on("message", (topic, message) => {
     const value = JSON.parse(message.toString());
-    if (value.from == "board") {
+    if (value.from === "board") {
       score = value.value;
       updateScore();
       img.src = swappedSrc;
@@ -44,33 +46,35 @@ script.onload = () => {
   client.on("error", (err) => {
     console.error(err);
   });
-
-  window.publishMessage = () => {
-    score++;
-    updateScore();
-
-    client.publish(
-      topic,
-      JSON.stringify({ type: "increment", from: "web", value: score }),
-      (err) => {
-        if (err) {
-          console.log(err);
-        }
-      }
-    );
-  };
-
-  function updateScore() {
-    const scoreElement = document.getElementById("score");
-    scoreElement.textContent = score;
-  }
 };
+
+// Define publishMessage in the global scope
+function publishMessage() {
+  score++;
+  updateScore();
+
+  client.publish(
+    topic,
+    JSON.stringify({ type: "increment", from: "web", value: score }),
+    (err) => {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+}
+
+function updateScore() {
+  const scoreElement = document.getElementById("score");
+  scoreElement.textContent = score;
+}
 
 const originalSrc = img.src;
 const swappedSrc = "https://img2.pic.in.th/pic/ajpanwitsmile.png";
+
 lol.addEventListener("click", () => {
   img.src = swappedSrc;
-  publishMessage();
+  publishMessage(); // Now this function is accessible
   setTimeout(() => {
     img.src = originalSrc;
   }, 500);
