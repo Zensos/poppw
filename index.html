@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MQTT Web Client</title>
+    <style>
+      body,
+      html {
+        font-family: "Inter", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      .full-screen {
+        min-height: 100vh;
+        width: 100%;
+        color: #fff;
+        padding: 40px 0;
+      }
+
+      .screen1 {
+        background: linear-gradient(135deg, #0a0f38, #17254a);
+      }
+
+      .screen2 {
+        background: linear-gradient(45deg, #1f2e5a, #2a3f7c);
+      }
+
+      .screen3 {
+        background: linear-gradient(135deg, #0a0f38, #17254a);
+      }
+
+      .screen4 {
+        background: linear-gradient(45deg, #1f2e5a, #2a3f7c);
+      }
+
+      .screen5 {
+        background: linear-gradient(135deg, #0a0f38, #17254a);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .flex-container {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: white;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #fff, #a5b4fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #a5b4fc;
+        margin-bottom: 2rem;
+      }
+
+      .image-container {
+        width: 100%;
+        max-width: 500px;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+      }
+
+      .pw {
+        width: 100%;
+        max-width: 500px;
+        height: 400px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .image-container:hover {
+        transform: translateY(-10px);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      img:active {
+        transform: scale(0.95);
+      }
+
+      .score {
+        font-size: 2.5rem;
+        color: #a5b4fc;
+        font-weight: bold;
+        text-shadow: 0 2px 10px rgba(165, 180, 252, 0.3);
+      }
+
+      .description-box {
+        background: rgba(40, 14, 173, 0.3);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-top: 20px;
+        border: 1px solid rgba(165, 180, 252, 0.2);
+        line-height: 1.6;
+      }
+
+      .video-container {
+        width: 100%;
+        max-width: 1500px;
+        margin: 20px auto;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-container {
+        background: #1e1e1e;
+        border-radius: 15px;
+        max-width: 100%;
+        margin: 20px auto;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-header {
+        background: #2d2d2d;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dot {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+      }
+
+      .red {
+        background: #ff5f56;
+      }
+      .yellow {
+        background: #ffbd2e;
+      }
+      .green {
+        background: #27c93f;
+      }
+
+      .code-content {
+        padding: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+        font-family: "Fira Code", monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .code-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .code-content::-webkit-scrollbar-track {
+        background: #1e1e1e;
+      }
+
+      .code-content::-webkit-scrollbar-thumb {
+        background: #4a4a4a;
+        border-radius: 4px;
+      }
+
+      .team-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: center;
+        margin-top: 40px;
+      }
+
+      .team-member {
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .team-member:hover {
+        transform: translateY(-10px);
+      }
+
+      .member-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border: 4px solid #a5b4fc;
+      }
+
+      .member-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .member-id {
+        color: #a5b4fc;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: linear-gradient(45deg, #a5b4fc, #6366f1);
+        border-radius: 30px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.3s ease;
+        margin-top: 20px;
+      }
+
+      .button:hover {
+        transform: translateY(-3px);
+      }
+    </style>
+  </head>
+  <body>
+    <section class="full-screen screen1">
+      <div
+        class="container"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <h1 class="title">POP PW</h1>
+        <p class="subtitle">Click to relieve your stress!</p>
+
+        <div
+          class="flex-container"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div class="pw" id="trigger">
+            <img
+              id="toggleImage"
+              src="https://img5.pic.in.th/file/secure-sv1/ajpanwit.png"
+              alt="panwit"
+            />
+          </div>
+
+          <div>
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="description-box">
+              "โครงงาน PopPW"
+              เป็นการพัฒนาเกมเพื่อผ่อนคลายความเครียดสำหรับนักศึกษาที่เรียนวิชา
+              Physical Computing
+              โดยมีแนวคิดในการนำเทคโนโลยีมาประยุกต์ใช้ในการสร้างเกมที่สนุกสนานและมีประโยชน์
+              เกมนี้มีลักษณะคล้ายกับเกม PopCat แต่มีการพัฒนาระบบเพิ่มเติม
+              สามารถกดคลิ๊กได้ผ่าน Website และกดผ่าน Switch บนตัว Board
+              โดยค่าของคะแนนที่ได้จะมีการเชื่อมโยงกัน
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="full-screen screen2">
+      <div class="container">
+        <h1 class="title">How It Works</h1>
+        <p class="subtitle">Watch our demonstration video</p>
+
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="500"
+            src="https://www.youtube.com/embed/D-wrWCKwDfg"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="full-screen screen3">
+      <div class="container">
+        <div class="flex-container">
+          <div>
+            <h1 class="title">Project Resources</h1>
+            <p class="subtitle">Check out our code and documentation</p>
+            <p>
+              Explore our project's source code and learn how we built this game
+              using MQTT and Physical Computing concepts.
+            </p>
+            <a href="#" class="button">View on GitHub</a>
+          </div>
+          <div class="image-container">
+            <img src="https://img5.pic.in.th/file/secure-sv1/462562494_3829340734005890_3824066421595085905_n.jpg" alt="Project Poster" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="full-screen screen4">
+      <div class="container">
+        <h1 class="title">Source Code ( Arduino )</h1>
+        <p class="subtitle">Browse through our implementation</p>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="code-content">
+            <pre><code>#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <WiFiS3.h>
+#include <MQTTClient.h>
+#include <ArduinoJson.h>
+```
+
+## ฟังก์ชั่นการเชื่อมต่อ MQTT
+* Arduino Side
+```c++
+int status = WL_IDLE_STATUS;
+  while (status != WL_CONNECTED) {
+    Serial.print("Connecting to SSID: ");
+    Serial.println(WIFI_SSID);
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    delay(10000);
+  }
+
+void connectToMQTT() {
+  mqtt.begin(MQTT_BROKER_ADRRESS, MQTT_PORT, network);
+  mqtt.onMessage(messageHandler);
+
+  Serial.print("Connecting to MQTT broker");
+  while (!mqtt.connect(MQTT_CLIENT_ID)) {
+    Serial.print(".");
+    delay(100);
+  }
+  Serial.println();
+  Serial.println("Connected to MQTT broker!");
+
+  mqtt.subscribe(subscription_TOPIC);
+  Serial.println("Subscribed to topic: " + String(subscription_TOPIC));
+}
+```
+* Web Server Side
+```js
+script.src = "https://unpkg.com/mqtt/dist/mqtt.min.js";
+
+script.onload = () => {
+  const client = mqtt.connect("ws://broker.hivemq.com:8000/mqtt");
+  const topic = "/test/roblox";
+
+  client.on("connect", () => {
+    console.log("Connected to HiveMQ WebSocket broker");
+    client.subscribe(topic, (err) => {
+      if (err) {
+        console.error("Subscription error:", err);
+      } else {
+        console.log(`Subscribed to topic: ${topic}`);
+```
+
+## ฟังก์ชันที่สำคัญ
+* ฟังก์ชันการกดปุ่มเพิ่มคะแนน
+```c++
+void loop() {
+  mqtt.loop();
+  // Read the current state of the button
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == HIGH && lastButtonState == LOW) {
+    // Button pressed, load and display the pressed shape
+    loadOriginalShape();
+    displayShape();
+
+    // Increment score
+    score++;
+    lcd.setCursor(7, 2); // Position for score
+    lcd.print(score);
+
+    sendToMQTT();
+
+    // Play pop sound
+    tone(buzzerPin, 1000, 200); // Tone at 1000Hz for 200ms
+  } else if (buttonState == LOW && lastButtonState == HIGH) {
+    // Button released, revert to original shape
+    loadPressedShape();
+    displayShape();
+  }
+
+  // Update lastButtonState to the current state
+  lastButtonState = buttonState;
+}
+  ```
+* ฟังก์ชัน Publish-Subscribe ผ่านบอร์ด
+```C++
+void sendToMQTT() {
+  StaticJsonDocument<128> jsonDoc;
+  jsonDoc["type"] = "increment";
+  jsonDoc["from"] = "board";
+  jsonDoc["value"] = score;
+
+  char messageBuffer[128];
+  serializeJson(jsonDoc, messageBuffer);
+
+  mqtt.publish(subscription_TOPIC, messageBuffer);
+  Serial.println("Published JSON to MQTT: " + String(messageBuffer));
+}
+
+void messageHandler(String &topic, String &payload) {
+  Serial.print("Received message on topic: ");
+  Serial.println(topic);
+  Serial.print("Payload: ");
+  Serial.println(payload);
+
+  StaticJsonDocument<128> jsonDoc;
+  DeserializationError error = deserializeJson(jsonDoc, payload);
+
+  if (error) {
+    Serial.print("Failed to parse JSON: ");
+    Serial.println(error.c_str());
+    return;
+  }
+
+  if (jsonDoc["type"] == "increment" && jsonDoc["from"] == "web") {
+    int receivedScore = jsonDoc["value"];
+    score = receivedScore;
+
+    // Update LCD with the new score
+    lcd.setCursor(7, 2);
+    lcd.print("   ");  // Clear previous score
+    lcd.setCursor(7, 2);
+    lcd.print(score);
+
+    Serial.print("Updated score from web: ");
+    Serial.println(score);
+  }
+}
+```
+* ฟังก์ชัน Publish-Subscribe ผ่านเว็บไซต์
+```js
+client.on("message", (topic, message) => {
+    console.log(`Received message: ${message.toString()} on topic: ${topic}`);
+    const value = JSON.parse(message.toString());
+    if (value.from == "board") {
+      score = value.value;
+      updateScore();
+      img.src = swappedSrc;
+      setTimeout(() => {
+        img.src = originalSrc;
+      }, 500);
+    }
+  });
+
+window.publishMessage = () => {
+    score++;
+    updateScore();
+
+    client.publish(
+      topic,
+      JSON.stringify({ type: "increment", from: "web", value: score }),
+      (err) => {
+        if (err) {
+          console.error("Publish error:", err);
+        } else {
+          console.log("Message published:", {
+            type: "increment",
+            from: "web",
+            value: score,
+          });
+        }
+      }
+    );
+  };</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen5" style="color: white; padding-bottom: 70px;">
+      <div class="container">
+        <h1 class="title" style="text-align: center;">Our Team</h1>
+        <p class="subtitle" style="text-align: center;">Meet the developers behind PopPW</p>
+
+        <div class="team-container">
+          <div class="team-member">
+            <div class="member-image">
+              <img src="https://img2.pic.in.th/pic/Zen.jpg" alt="Team Member 1" />
+            </div>
+            <div class="member-name">Koobun Kritnetithat</div>
+            <div class="member-id">66070024</div>
+          </div>
+
+          <div class="team-member">
+            <div class="member-image">
+              <img src="https://img2.pic.in.th/pic/462637784_1184096175993447_3198062696571348462_n.jpg" alt="Team Member 2" />
+            </div>
+            <div class="member-name">Nuttawit Phiphatchirakul</div>
+            <div class="member-id">66070065</div>
+          </div>
+
+          <div class="team-member">
+            <div class="member-image">
+              <img src="https://img5.pic.in.th/file/secure-sv1/DB2685EF-D631-4AD3-A5CA-BD78BDDBBBCB.jpg" alt="Team Member 3" />
+            </div>
+            <div class="member-name">Tanansorn Sirirath</div>
+            <div class="member-id">66070070</div>
+          </div>
+          <div class="team-member">
+            <div class="member-image">
+              <img src="https://img5.pic.in.th/file/secure-sv1/8db6db5d-4f9f-4c3d-a2d7-b3fbf929fc74.jpeg" alt="Team Member 3" />
+            </div>
+            <div class="member-name">Benyapa Yompakdee</div>
+            <div class="member-id">66070110</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>

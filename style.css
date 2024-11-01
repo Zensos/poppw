@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f4f6;
+  font-family: Arial, sans-serif;
+}
+
+.game-container {
+  text-align: center;
+  display: absolute;
+  align-items: start;
+  text-align: start;
+  justify-content: start;
+}
+
+.title {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.heart {
+  width: 100px;
+  height: 90px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  width: 100px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.heart:after {
+  top: -80px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.heart:before {
+  left: 0;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.heart.clicked {
+  background-color: #ff6b6b;
+}
+
+.score {
+  font-size: 24px;
+  margin-top: 20px;
+}
